@@ -9,6 +9,12 @@ Quite often we need to apply a function over an object preserving the object's k
 - Preserves original object keys
 - Automatically curried
 
+## Installation
+
+```
+npm install poly-map
+```
+
 ## Usage
 
 ```javascript
