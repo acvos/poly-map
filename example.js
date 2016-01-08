@@ -11,10 +11,12 @@ function double(number) {
     return number * 2;
 }
 
+// Complete application
 console.log(map(double, object));
 console.log(map(double, array));
 
-// Pipeline-style usage
-// getDataAsPromise()
-//     .then(map(double))
-//     .then(console.log)
+
+// Partial application
+var doubleEachElement = map(double);
+console.log(doubleEachElement(object));
+console.log(doubleEachElement(array));
