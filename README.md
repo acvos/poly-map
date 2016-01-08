@@ -2,7 +2,7 @@
 Polymorphic curried map for functional style JS
 
 ## Motivation
-Quite often we need to apply a function over an object preserving the object's key structure. Javascript provides us with a native map function that works with arrays, but when we deal with objects we find ourselves writing a lot of identical loops. This tool works equally well with both arrays and objects so you never have to write those annoying iterations again.
+Quite often we need to apply a function over an object preserving the object's key structure. Javascript provides us with a native map function that works with arrays, but when it comes to objects we end up writing a lot of identical loops. This tool works equally well with both arrays and objects so you never have to write those annoying iterations again.
 
 ## Features
 - Works with objects and arrays
