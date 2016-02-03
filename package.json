@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/acvos/map.git"
+    "url": "https://github.com/acvos/poly-map.git"
   },
   "author": "Anthony Chernikov <achernikov@acvos>",
   "dependencies": {
