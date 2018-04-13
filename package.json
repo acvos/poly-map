@@ -3,17 +3,24 @@
   "description": "Polymorphic curried map for functional style JS",
   "keywords": "map, object map, array map, pipeline",
   "version": "1.1.0",
+  "scripts": {
+    "test": "jest"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/acvos/map.git"
+    "url": "https://github.com/acvos/poly-map.git"
   },
-  "author": "Anthony Chernikov <achernikov@acvos>",
+  "author": "Anthony Chernikov <achernikov@acvos.com>",
   "dependencies": {
     "curry": "^1.2.0"
   },
+  "license": "Apache-2.0",
   "engines": {
     "node": ">=4.0",
     "npm": ">=2.0"
   },
-  "license": "Apache-2.0"
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "jest": "^18.1.0"
+  }
 }

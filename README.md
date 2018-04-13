@@ -2,12 +2,13 @@
 Polymorphic curried map for functional style JS
 
 ## Motivation
-Quite often we need to apply a function over an object preserving the object's key structure. Javascript provides us with a native map function that works with arrays, but when it comes to objects we end up writing a lot of identical loops. This tool works equally well with both arrays and objects so you never have to write those annoying iterations again.
+Javascript provides a native map function for arrays. However, sometimes we need to apply the same function to all properties of an object. Sometimes we are not sure or do not care which type of data we receive as an input. Sometimes we don't even know if the data is in fact present. So we end up writing loops, type checks, etc. Poly-map solves this problem in a generic way works equally well with arrays and objects so you never have to write those annoying iterations again.
 
 ## Features
 - Works with objects and arrays
 - Preserves original object keys
 - Automatically curried
+- Doesn't break when the input value is undefined
 
 ## Installation
 
@@ -35,9 +36,12 @@ function double(number) {
 var result = map(double, object);
 // -> {a: 200, b: 400}
 
+// Maybe
+var result = map(double, undefined);
+// -> undefined
+
 result = map(double, array);
 // -> [200, 400]
-
 
 // Pipeline-style usage
 getDataAsPromise()
@@ -45,3 +49,8 @@ getDataAsPromise()
     .then(console.log)
 ```
 
+## Testing
+
+```
+npm test
+```
