@@ -1,28 +1,29 @@
 var curry = require("curry")
 
-function map(func, object) {
-  if (object === undefined) {
+function map(func, input) {
+  if (input === undefined) {
     return undefined
   }
 
-  if (object === null) {
+  if (input === null) {
     throw new Error("[poly-map] Can't iterate over null")
   }
-  else if (typeof object !== "object") {
-    throw new Error("[poly-map] Can't iterate over " + typeof object)
-  }
-  else if (object.constructor.name !== 'Object' && object.constructor.name !== 'Array') {
-    throw new Error("[poly-map] Can't iterate over " + object.constructor.name)
+  else if (typeof input !== "object") {
+    throw new Error("[poly-map] Can't iterate over " + typeof input)
   }
 
-  if (object instanceof Array) {
-    return object.map(func)
+  if (input instanceof Array) {
+    return input.map(func)
+  }
+
+  if (input.constructor !== Object) {
+    throw new Error("[poly-map] Can't iterate over " + input)
   }
 
   var result = {}
 
-  for (var i in object) {
-    result[i] = func(object[i], i)
+  for (var i in input) {
+    result[i] = func(input[i], i)
   }
 
   return result
