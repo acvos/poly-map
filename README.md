@@ -1,4 +1,5 @@
 # poly-map
+[![Build Status](https://travis-ci.org/acvos/poly-map.svg?branch=master)](https://travis-ci.org/acvos/poly-map)
 Polymorphic curried map for functional style JS
 
 ## Motivation
