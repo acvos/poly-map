@@ -45,6 +45,10 @@ var result = map(double, undefined);
 result = map(double, array);
 // -> [200, 400]
 
+// Promise support
+map(double, Promise.resolve([100, 200]))
+// ~> Promise of [200, 400]
+
 // Pipeline-style usage
 getDataAsPromise()
     .then(map(double))
