@@ -46,8 +46,9 @@ result = map(double, array);
 // -> [200, 400]
 
 // Promise support
-map(double, Promise.resolve([100, 200]))
-// ~> Promise of [200, 400]
+const data = Promise.resolve([100, 200])
+map(double, data).then(console.log)
+// -> [200, 400]
 
 // Pipeline-style usage
 getDataAsPromise()
