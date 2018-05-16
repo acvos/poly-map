@@ -2,7 +2,7 @@
   "name": "poly-map",
   "description": "Polymorphic curried map for functional style JS",
   "keywords": "map, object map, array map, promise map, pipeline",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "scripts": {
     "test": "jest"
   },
