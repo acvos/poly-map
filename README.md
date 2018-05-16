@@ -10,6 +10,7 @@ Javascript provides a native map function for arrays. However, sometimes we need
 - Preserves original object keys
 - Automatically curried
 - Doesn't break when the input value is undefined
+- Maps over promises
 
 ## Installation
 

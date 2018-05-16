@@ -8,7 +8,8 @@ function map(func, input) {
   if (input === null) {
     throw new Error("[poly-map] Can't iterate over null")
   }
-  else if (typeof input !== "object") {
+  else if (typeof input !== "object"
+    || input.constructor === RegExp) {
     throw new Error("[poly-map] Can't iterate over " + typeof input)
   }
 
@@ -16,8 +17,8 @@ function map(func, input) {
     return input.map(func)
   }
 
-  if (input.constructor !== Object) {
-    throw new Error("[poly-map] Can't iterate over " + input)
+  if (input instanceof Promise) {
+    return input.then(data => map(func, data))
   }
 
   var result = {}

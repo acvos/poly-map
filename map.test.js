@@ -31,10 +31,23 @@ test("doesn't break on undefined", function () {
 
 test("breaks on data that can't be iterated over", function () {
   expect(() => map(x => x.toUpperCase(), 'doge approve')).to.throwException()
+  expect(() => map(x => x.toUpperCase(), String('doge approve'))).to.throwException()
   expect(() => map(x => x.toUpperCase(), 0)).to.throwException()
   expect(() => map(x => x.toUpperCase(), 100500)).to.throwException()
   expect(() => map(x => x.toUpperCase(), true)).to.throwException()
   expect(() => map(x => x.toUpperCase(), false)).to.throwException()
   expect(() => map(x => x.toUpperCase(), null)).to.throwException()
   expect(() => map(x => x.toUpperCase(), new RegExp('sss'))).to.throwException()
+})
+
+test("map(Promise) -> Promise(map)", function () {
+  let test = map(x => x.toUpperCase())
+
+  let input = Promise.resolve(['doge', 'wow'])
+  expect(test(input)).to.be.a(Promise)
+  test(input).then(x => expect(x).to.eql(['DOGE', 'WOW']))
+
+  input = Promise.resolve({ doge: 'wow', such: 'much' })
+  expect(test(input)).to.be.a(Promise)
+  test(input).then(x => expect(x).to.eql({ doge: 'WOW', such: 'MUCH' }))
 })
