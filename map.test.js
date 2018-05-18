@@ -60,3 +60,15 @@ test("map(Promise) -> Promise(map)", function () {
   expect(test(input)).to.be.a(Promise)
   test(input).then(x => expect(x).to.eql({ doge: 'WOW', such: 'MUCH' }))
 })
+
+test("Supports async functions", function () {
+  let test = map(x => Promise.resolve(x.toUpperCase()))
+
+  let input = Promise.resolve(['doge', 'wow'])
+  expect(test(input)).to.be.a(Promise)
+  test(input).then(x => expect(x).to.eql(['DOGE', 'WOW']))
+
+  input = Promise.resolve({ doge: 'wow', such: 'much' })
+  expect(test(input)).to.be.a(Promise)
+  test(input).then(x => expect(x).to.eql({ doge: 'WOW', such: 'MUCH' }))
+})

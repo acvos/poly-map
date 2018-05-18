@@ -1,5 +1,20 @@
 var curry = require("curry")
 
+function isPromise(x) {
+  return (x instanceof Promise)
+}
+
+function identity(x) {
+  return x
+}
+
+var zip = curry(function (keys, values) {
+  return values.reduce(function (acc, value, index) {
+    acc[keys[index]] = value
+    return acc
+  }, {})
+})
+
 function map(func, input) {
   if (input === undefined) {
     return undefined
@@ -13,21 +28,19 @@ function map(func, input) {
     throw new Error("[poly-map] Can't iterate over " + typeof input)
   }
 
-  if (input instanceof Array) {
-    return input.map(func)
-  }
-
   if (input instanceof Promise) {
     return input.then(data => map(func, data))
   }
 
-  var result = {}
+  var keys = Object.keys(input)
+  var results = Object.values(input).map(func)
+  var process = (input instanceof Array ? identity : zip(keys))
 
-  for (var i in input) {
-    result[i] = func(input[i], i)
+  if (results.filter(isPromise).length > 0) {
+    return Promise.all(results).then(process)
   }
 
-  return result
+  return process(results)
 }
 
 module.exports = curry(map)

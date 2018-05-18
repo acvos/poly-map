@@ -11,6 +11,7 @@ Javascript provides a native map function for arrays. However, sometimes we need
 - Automatically curried
 - Doesn't break when the input value is undefined
 - Maps over promises
+- Supports asynchronous functions
 
 ## Installation
 
@@ -53,6 +54,12 @@ map(double, data).then(console.log)
 // Pipeline-style usage
 getDataAsPromise()
     .then(map(double))
+    .then(console.log)
+
+// Async function support
+const data = [100, 200]
+map(x => fetch(`http://some.com/resource/${x}`, data)
+    .then(map(x => x.json()))
     .then(console.log)
 ```
 
