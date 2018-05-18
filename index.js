@@ -33,7 +33,9 @@ function map(func, input) {
   }
 
   var keys = Object.keys(input)
-  var results = Object.values(input).map(func)
+  var results = Object.values(input).map(function (value, index) { 
+    return func(value, keys[index])
+  })
   var process = (input instanceof Array ? identity : zip(keys))
 
   if (results.filter(isPromise).length > 0) {
