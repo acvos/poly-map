@@ -4,10 +4,6 @@ function isPromise(x) {
   return (x instanceof Promise)
 }
 
-function identity(x) {
-  return x
-}
-
 var zip = curry(function (keys, values) {
   return values.reduce(function (acc, value, index) {
     acc[keys[index]] = value
@@ -22,8 +18,7 @@ function map(func, input) {
 
   if (input === null) {
     throw new Error("[poly-map] Can't iterate over null")
-  }
-  else if (typeof input !== "object"
+  } else if (typeof input !== "object"
     || input.constructor === RegExp) {
     throw new Error("[poly-map] Can't iterate over " + typeof input)
   }
@@ -32,17 +27,24 @@ function map(func, input) {
     return input.then(data => map(func, data))
   }
 
+  var result = (input instanceof Array ? [] : {})
   var keys = Object.keys(input)
-  var results = Object.values(input).map(function (value, index) { 
-    return func(value, keys[index])
-  })
-  var process = (input instanceof Array ? identity : zip(keys))
+  var i, key, wait = false
 
-  if (results.filter(isPromise).length > 0) {
-    return Promise.all(results).then(process)
+  for (i = 0; i < keys.length; i++) {
+    key = keys[i]
+    result[key] = func(input[key], key)
+
+    if (isPromise(result[key])) {
+      wait = true
+    }
   }
 
-  return process(results)
+  if (!wait) {
+    return result
+  }
+
+  return Promise.all(Object.values(result)).then(zip(keys))
 }
 
 module.exports = curry(map)

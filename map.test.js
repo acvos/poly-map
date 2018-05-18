@@ -11,6 +11,10 @@ test('maps over plain objects', function () {
   expect(map(x => x * 2, { doge: 100, wow: 200 })).to.eql({ doge: 200, wow: 400 })
 })
 
+test('the function has access to value and key', function () {
+  expect(map((v, k) => [v, k], { doge: 'wow', such: 'much' })).to.eql({ doge: ['wow', 'doge'], such: ['much', 'such'] })
+})
+
 test('maps over custom objects', function () {
   const User = function (name, role) {
     this.name = name
