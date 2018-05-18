@@ -6,9 +6,18 @@ test('maps over arrays ', function () {
   expect(map(x => x * 2, [100, 200])).to.eql([200, 400])
 })
 
-test('maps over objects', function () {
+test('maps over plain objects', function () {
   expect(map(x => x.toUpperCase(), { doge: 'wow', such: 'much' })).to.eql({ doge: 'WOW', such: 'MUCH' })
   expect(map(x => x * 2, { doge: 100, wow: 200 })).to.eql({ doge: 200, wow: 400 })
+})
+
+test('maps over custom objects', function () {
+  const User = function (name, role) {
+    this.name = name
+    this.role = role
+  }
+
+  expect(map(x => x.toUpperCase(), new User('doge', 'very'))).to.eql({ name: 'DOGE', role: 'VERY' })
 })
 
 test('curried', function () {
