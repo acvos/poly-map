@@ -24,7 +24,7 @@ function map(func, input) {
   }
 
   if (input instanceof Promise) {
-    return input.then(data => map(func, data))
+    return input.then(function(data) { map(func, data) })
   }
 
   var result = (input instanceof Array ? [] : {})
