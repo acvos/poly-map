@@ -4,11 +4,11 @@ function isPromise(x) {
   return (x instanceof Promise)
 }
 
-var zip = curry(function (keys, values) {
+var zip = curry(function (initialValue, keys, values) {
   return values.reduce(function (acc, value, index) {
     acc[keys[index]] = value
     return acc
-  }, {})
+  }, initialValue)
 })
 
 function map(func, input) {
@@ -24,7 +24,7 @@ function map(func, input) {
   }
 
   if (input instanceof Promise) {
-    return input.then(function(data) { map(func, data) })
+    return input.then(function (data) { return map(func, data) })
   }
 
   var result = (input instanceof Array ? [] : {})
@@ -44,7 +44,8 @@ function map(func, input) {
     return result
   }
 
-  return Promise.all(Object.values(result)).then(zip(keys))
+  var initialValue = (input instanceof Array ? [] : {})
+  return Promise.all(Object.values(result)).then(zip(initialValue, keys))
 }
 
 module.exports = curry(map)
