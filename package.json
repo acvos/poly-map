@@ -27,6 +27,6 @@
     "npm": ">=2.0"
   },
   "devDependencies": {
-    "jest": "^18.1.0"
+    "jest": "^25.0.0"
   }
 }
