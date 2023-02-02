@@ -57,7 +57,7 @@ map(double, data).then(console.log)
 
 // Promise support
 data = [Promise.resolve(100), Promise.resolve(200)]
-map(double, [data1, data2]).then(console.log)
+map(double, data).then(console.log)
 // -> [200, 400]
 
 // Pipeline-style usage
