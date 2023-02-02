@@ -60,7 +60,7 @@ getDataAsPromise()
 
 // Async function support
 data = [100, 200]
-map(x => fetch(`http://some.com/resource/${x}`, data)
+map(x => fetch(`http://some.com/resource/${x}`, data))
     .then(map(x => x.json()))
     .then(console.log)
 ```
