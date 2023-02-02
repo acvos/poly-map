@@ -22,33 +22,42 @@ npm install poly-map
 ## Usage
 
 ```javascript
-var map = require('poly-map');
+let map = require('poly-map');
 
-var object = {
+let object = {
     a: 100,
     b: 200
 };
 
-var array = [100, 200];
+let array = [100, 200];
 
 function double(number) {
     return number * 2;
 }
 
 // Basic map
-var result = map(double, object);
+let result = map(double, object);
 // -> {a: 200, b: 400}
-
-// Maybe
-var result = map(double, undefined);
-// -> undefined
 
 result = map(double, array);
 // -> [200, 400]
 
+// Maybe
+result = map(double, undefined);
+// -> undefined
+
+// Primitives
+result = map(double, 100);
+// -> 200
+
 // Promise support
-const data = Promise.resolve([100, 200])
+let data = Promise.resolve([100, 200])
 map(double, data).then(console.log)
+// -> [200, 400]
+
+// Promise support
+data = [Promise.resolve(100), Promise.resolve(200)]
+map(double, [data1, data2]).then(console.log)
 // -> [200, 400]
 
 // Pipeline-style usage
@@ -57,7 +66,7 @@ getDataAsPromise()
     .then(console.log)
 
 // Async function support
-const data = [100, 200]
+data = [100, 200]
 map(x => fetch(`http://some.com/resource/${x}`, data)
     .then(map(x => x.json()))
     .then(console.log)

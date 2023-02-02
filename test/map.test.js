@@ -1,4 +1,4 @@
-const expect = require("expect")
+const { expect } = require("expect")
 
 const map = require("../index.js")
 
@@ -26,14 +26,28 @@ describe('testing map()', function () {
     expect(map(x => x.toUpperCase(), new User('doge', 'very'))).toEqual({ name: 'DOGE', role: 'VERY' })
   })
 
-  it('curried', function () {
-    let test = map(x => x.toUpperCase())
-    expect(test(['wow', 'such', 'much'])).toEqual(['WOW', 'SUCH', 'MUCH'])
-    expect(test({ doge: 'wow', such: 'much' })).toEqual({ doge: 'WOW', such: 'MUCH' })
+  it("maps over strings", function () {
+    const test = map(x => x.toUpperCase())
 
-    test = map(x => x * 2)
-    expect(test([100, 200])).toEqual([200, 400])
-    expect(test({ doge: 100, wow: 200 })).toEqual({ doge: 200, wow: 400 })
+    expect(test("aaaaa")).toEqual("AAAAA")
+    expect(test("whale now")).toEqual("WHALE NOW")
+    expect(test(String('doge approve'))).toEqual("DOGE APPROVE")
+    expect(test("")).toEqual("")
+  })
+
+  it("maps over numbers", function () {
+    const test = map(x => x * 2)
+
+    expect(test(0)).toEqual(0)
+    expect(test(100)).toEqual(200)
+    expect(test(1.5)).toEqual(3)
+  })
+
+  it("maps over booleans", function () {
+    const test = map(x => !x)
+
+    expect(test(true)).toEqual(false)
+    expect(test(false)).toEqual(true)
   })
 
   it("doesn't break on undefined", function () {
@@ -44,15 +58,12 @@ describe('testing map()', function () {
     expect(test(undefined)).toEqual(undefined)
   })
 
-  it("breaks on data that can't be iterated over", function () {
-    expect(() => map(x => x.toUpperCase(), 'doge approve')).toThrow()
-    expect(() => map(x => x.toUpperCase(), String('doge approve'))).toThrow()
-    expect(() => map(x => x.toUpperCase(), 0)).toThrow()
-    expect(() => map(x => x.toUpperCase(), 100500)).toThrow()
-    expect(() => map(x => x.toUpperCase(), true)).toThrow()
-    expect(() => map(x => x.toUpperCase(), false)).toThrow()
-    expect(() => map(x => x.toUpperCase(), null)).toThrow()
-    expect(() => map(x => x.toUpperCase(), new RegExp('sss'))).toThrow()
+  it("doesn't break on null", function () {
+    let test = map(x => x.toUpperCase())
+    expect(test(null)).toEqual(null)
+
+    test = map(x => x * 2)
+    expect(test(null)).toEqual(null)
   })
 
   it("map(Promise) -> Promise(map)", function () {
@@ -61,7 +72,13 @@ describe('testing map()', function () {
     let input = Promise.resolve(['doge', 'wow'])
     test(input).then(x => expect(x).toEqual(['DOGE', 'WOW']))
 
+    input = [Promise.resolve('doge'), Promise.resolve('wow')]
+    test(input).then(x => expect(x).toEqual(['DOGE', 'WOW']))
+
     input = Promise.resolve({ doge: 'wow', such: 'much' })
+    test(input).then(x => expect(x).toEqual({ doge: 'WOW', such: 'MUCH' }))
+
+    input = { doge: Promise.resolve('wow'), such: Promise.resolve('much') }
     test(input).then(x => expect(x).toEqual({ doge: 'WOW', such: 'MUCH' }))
   })
 
@@ -73,5 +90,21 @@ describe('testing map()', function () {
 
     input = Promise.resolve({ doge: 'wow', such: 'much' })
     test(input).then(x => expect(x).toEqual({ doge: 'WOW', such: 'MUCH' }))
+
+    input = ['doge', 'wow']
+    test(input).then(x => expect(x).toEqual(['DOGE', 'WOW']))
+
+    input = { doge: 'wow', such: 'much' }
+    test(input).then(x => expect(x).toEqual({ doge: 'WOW', such: 'MUCH' }))
+  })
+
+  it('curried', function () {
+    let test = map(x => x.toUpperCase())
+    expect(test(['wow', 'such', 'much'])).toEqual(['WOW', 'SUCH', 'MUCH'])
+    expect(test({ doge: 'wow', such: 'much' })).toEqual({ doge: 'WOW', such: 'MUCH' })
+
+    test = map(x => x * 2)
+    expect(test([100, 200])).toEqual([200, 400])
+    expect(test({ doge: 100, wow: 200 })).toEqual({ doge: 200, wow: 400 })
   })
 })

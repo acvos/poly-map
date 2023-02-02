@@ -1,51 +1,86 @@
-var curry = require("curry")
-
-function isPromise(x) {
-  return (x instanceof Promise)
+function isObject(x) {
+  return typeof x === "object" && x !== null
 }
 
-var zip = curry(function (initialValue, keys, values) {
-  return values.reduce(function (acc, value, index) {
-    acc[keys[index]] = value
-    return acc
-  }, initialValue)
-})
+function zip(keys) {
+  return function (values) {
+    var output = {}
+    for (var i = 0; i < keys.length; i++) {
+      output[keys[i]] = values[i]
+    }
 
-function map(func, input) {
-  if (input === undefined) {
-    return undefined
+    return output
+  }
+}
+
+function apply(func, value, key) {
+  if (value === undefined || value === null) {
+    return value
   }
 
-  if (input === null) {
-    throw new Error("[poly-map] Can't iterate over null")
-  } else if (typeof input !== "object"
-    || input.constructor === RegExp) {
-    throw new Error("[poly-map] Can't iterate over " + typeof input)
+  if (value instanceof Promise) {
+    return value.then(function (x) { return func(x, key) })
   }
 
-  if (input instanceof Promise) {
-    return input.then(function (data) { return map(func, data) })
-  }
+  return func(value, key)
+}
 
-  var result = (input instanceof Array ? [] : {})
-  var keys = Object.keys(input)
-  var i, key, wait = false
+function mapArray(func, input) {
+  var wait = false
 
-  for (i = 0; i < keys.length; i++) {
-    key = keys[i]
-    result[key] = func(input[key], key)
-
-    if (isPromise(result[key])) {
+  var output = [], wait = false
+  for (var i = 0; i < input.length; i++) {
+    var result = apply(func, input[i], i)
+    if (result instanceof Promise) {
       wait = true
     }
+
+    output[i] = result
   }
 
-  if (!wait) {
-    return result
-  }
-
-  var initialValue = (input instanceof Array ? [] : {})
-  return Promise.all(Object.values(result)).then(zip(initialValue, keys))
+  return wait ? Promise.all(output) : output
 }
 
-module.exports = curry(map)
+function mapObject(func, input) {
+  var keys = Object.keys(input)
+
+  var values = [], wait = false
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i]
+
+    var result = apply(func, input[key], key)
+    if (result instanceof Promise) {
+      wait = true
+    }
+
+    values[i] = result
+  }
+
+  const zipWithKeys = zip(keys)
+
+  return wait ? Promise.all(values).then(zipWithKeys) : zipWithKeys(values)
+}
+
+function map(func) {
+  return function (input) {
+    if (!isObject(input)) {
+      return apply(func, input)
+    }
+
+    if (input instanceof Promise) {
+      return input.then(map(func))
+    }
+
+    return input instanceof Array
+      ? mapArray(func, input)
+      : mapObject(func, input)
+  }
+}
+
+module.exports = function () {
+  const args = Array.prototype.slice.call(arguments)
+
+  return args.length === 1
+    ? map(args[0])
+    : map(args[0])(args[1])
+}
