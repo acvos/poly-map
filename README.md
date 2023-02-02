@@ -24,22 +24,15 @@ npm install poly-map
 ```javascript
 let map = require('poly-map');
 
-let object = {
-    a: 100,
-    b: 200
-};
-
-let array = [100, 200];
-
 function double(number) {
     return number * 2;
 }
 
 // Basic map
-let result = map(double, object);
+let result = map(double, { a: 100, b: 200 });
 // -> {a: 200, b: 400}
 
-result = map(double, array);
+result = map(double, [100, 200]);
 // -> [200, 400]
 
 // Maybe
